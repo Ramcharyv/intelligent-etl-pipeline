@@ -1,0 +1,37 @@
+﻿services:
+  spark:
+    image: ietl_spark_dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ietl_spark
+    ports:
+      - "4040:4040"
+      - "8082:8080"
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./mlflow_runs:/app/mlflow_runs
+      - ./tests:/app/tests
+      - ./spark_test.py:/app/spark_test.py
+    working_dir: /app
+    command: tail -f /dev/null
+
+  mlflow:
+    image: python:3.11-slim
+    container_name: ietl_mlflow
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./mlflow_runs:/mlflow
+    command: >
+      bash -c "pip install mlflow -q &&
+               mlflow server
+               --host 0.0.0.0
+               --port 5001
+               --backend-store-uri /mlflow
+               --default-artifact-root /mlflow"
+
+networks:
+  default:
+    name: ietl_network
