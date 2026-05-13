@@ -1,8 +1,15 @@
-﻿FROM public.ecr.aws/bitnami/spark:3.5
+﻿FROM python:3.11-bullseye
 
-USER root
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jdk-headless \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --quiet \
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH=/usr/lib/jvm/java-11-openjdk-amd64/bin:/usr/local/bin:/usr/bin:/bin
+
+RUN pip3 install --no-cache-dir \
+    pyspark==3.4.1 \
     delta-spark==2.4.0 \
     scikit-learn==1.4.2 \
     mlflow==2.13.0 \
