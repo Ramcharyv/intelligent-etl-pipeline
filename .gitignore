@@ -1,0 +1,9 @@
+﻿venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+data/delta/
+data/reports/
+mlflow_runs/
+*.egg-info/
+.env
